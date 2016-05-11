@@ -1,0 +1,55 @@
+﻿<md-dialog aria-label="Add new" flex="35">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add New Task</h2>
+                <span flex></span>
+                <md-button class="md-icon-button"
+                           ng-click="cancel()">
+                    <md-icon md-svg-src="img/icons/ic_clear_black_24px.svg"
+                             aria-label="Close dialog">
+                    </md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div ng-show="errors"
+                     class="validation-summary-errors text-danger">
+                    <ul>
+                        <li ng-repeat="error in errors">{{error}}</li>
+                    </ul>
+                </div>
+                <ng-form name="taskForm"
+                         class="form-horizontal"
+                         role="form">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"
+                               for="email">
+                            Description
+                        </label>
+                        <div class="col-md-10">
+                            <input class="form-control"
+                                   id="description"
+                                   name="description"
+                                   type="text"
+                                   ng-model="task.Description"
+                                   enter-key="ok()"
+                                   required
+                                   md-autofocus />
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button ng-disabled="taskForm.$invalid"
+                       ng-click="ok()">
+                OK
+            </md-button>
+            <md-button ng-click="cancel()">
+                Cancel
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

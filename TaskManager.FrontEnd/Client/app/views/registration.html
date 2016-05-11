@@ -1,0 +1,86 @@
+﻿<h2>Register.</h2>
+<h4>Create a new account.</h4>
+<hr />
+<div ng-show="errors"
+     class="validation-summary-errors text-danger">
+    <ul>
+        <li ng-repeat="error in errors">{{error}}</li>
+    </ul>
+</div>
+<ng-form name="form"
+         class="form-horizontal"
+         role="form">
+    <div class="form-group"
+         ng-class="{'has-error': form.email.$dirty && form.email.$invalid}">
+        <label class="col-md-2 control-label"
+               for="email">
+            Email
+        </label>
+        <div class="col-md-10">
+            <input class="form-control"
+                   id="email"
+                   name="email"
+                   type="email"
+                   ng-model="data.Email"
+                   ng-model-options="{ updateOn: 'blur' }"
+                   enter-key="register()"
+                   required
+                   autofocus />
+            <span ng-show="form.email.$dirty && form.email.$error.email"
+                  class="text-danger">
+                The Email field is not a valid e-mail address.
+            </span>
+            <span ng-show="form.email.$dirty && form.email.$error.required"
+                  class="text-danger">
+                The Email field is required.
+            </span>
+        </div>
+    </div>
+    <div class="form-group"
+         ng-class="{'has-error': form.password.$dirty && form.password.$invalid}">
+        <label class="col-md-2 control-label"
+               for="password">
+            Password
+        </label>
+        <div class="col-md-10">
+            <input class="form-control"
+                   id="password"
+                   name="password"
+                   type="password"
+                   ng-model="data.Password"
+                   enter-key="register()"
+                   required />
+            <span ng-show="form.password.$dirty && form.password.$error.required"
+                  class="text-danger">
+                The Password field is required.
+            </span>
+        </div>
+    </div>
+    <div class="form-group"
+         ng-class="{'has-error': form.confirmPassword.$dirty && form.confirmPassword.$invalid}">
+        <label class="col-md-2 control-label"
+               for="confirmPassword">
+            Confirm password
+        </label>
+        <div class="col-md-10">
+            <input class="form-control"
+                   name="confirmPassword"
+                   type="password"
+                   ng-model="data.ConfirmPassword"
+                   enter-key="register()"
+                   required />
+            <span ng-show="form.confirmPassword.$dirty && form.confirmPassword.$error.required"
+                  class="text-danger">
+                The confirmation password is required.
+            </span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit"
+                   class="btn btn-default"
+                   value="Register"
+                   ng-click="register()" />
+        </div>
+    </div>
+</ng-form>
