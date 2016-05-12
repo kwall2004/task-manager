@@ -1,3 +1,8 @@
+# Setup
+Go to Solution Property Pages, select Multiple startup projects, select Start for both projects.
+
+Go to TaskManager.API Properties, select Start Action -> Don't open a page.
+
 # API
 
 The API project was started with the Visual Studio 2015 ASP.NET Web API (Individual User Accounts Authentication) template.  It uses the default of using a LocalDB database.  This database is included in the repo.
