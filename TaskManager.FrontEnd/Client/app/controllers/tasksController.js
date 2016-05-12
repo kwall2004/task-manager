@@ -76,6 +76,7 @@
         $scope.isCompletedChanged = function (task) {
             tasksService.changeTask(task).then(
                  function (response) {
+                     filter();
                  },
                  function (response) {
                  }
