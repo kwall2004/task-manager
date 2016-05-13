@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,12 +23,11 @@ namespace TaskManager.API.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Tasks
-        public async Task<IEnumerable<TaskModel>> GetTaskModels()
+        public IEnumerable<TaskModel> GetTaskModels()
         {
-            var userManager = Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var userId = User.Identity.GetUserId();
 
-            return db.TaskModels.ToList().Where(task => task.User.Id == user.Id);
+            return db.TaskModels.ToList().Where(task => task.User.Id == userId);
         }
 
         // GET: api/Tasks/5
@@ -47,9 +47,9 @@ namespace TaskManager.API.Controllers
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutTaskModel(int id, TaskModel taskModel)
         {
-            var userManager = Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var user = await userManager.FindByNameAsync(User.Identity.Name);
-            taskModel.User = db.Users.Find(user.Id);
+            var userId = User.Identity.GetUserId();
+
+            taskModel.User = db.Users.Find(userId);
 
             if (!ModelState.IsValid)
             {
@@ -86,9 +86,9 @@ namespace TaskManager.API.Controllers
         [ResponseType(typeof(TaskModel))]
         public async Task<IHttpActionResult> PostTaskModel(TaskModel taskModel)
         {
-            var userManager = Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var user = await userManager.FindByNameAsync(User.Identity.Name);
-            taskModel.User = db.Users.Find(user.Id);
+            var userId = User.Identity.GetUserId();
+
+            taskModel.User = db.Users.Find(userId);
 
             db.TaskModels.Add(taskModel);
 
