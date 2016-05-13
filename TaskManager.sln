@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.API", "TaskMana
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.FrontEnd", "TaskManager.FrontEnd\TaskManager.FrontEnd.csproj", "{5D70B0BF-917E-423C-8997-BB86F336181B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.MVC", "..\TaskManager.MVC\TaskManager.MVC\TaskManager.MVC.csproj", "{2ED20543-C15D-463B-92C8-F21A4F37EE50}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.MVC", "TaskManager.MVC\TaskManager.MVC.csproj", "{2ED20543-C15D-463B-92C8-F21A4F37EE50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

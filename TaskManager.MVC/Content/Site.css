@@ -1,0 +1,52 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+table th:nth-child(1) {
+    width: 20%;
+}
+
+table th:nth-child(2) {
+    width: 60%;
+}
+
+table th:nth-child(3) {
+    width: 20%;
+}
+
+table .checkbox {
+    margin: 0;
+}
+
+th .checkbox label {
+    font-weight: bold;
+}
+
+.completed {
+    background-color: honeydew;
+}
+
+.modal-sm {
+  max-width: 300px;
+}

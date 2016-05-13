@@ -1,0 +1,304 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@using TaskManager.MVC.Models
+
+@model TasksViewModel
+
+<h2>Tasks</h2>
+<div class="row">
+    <div class="col-md-12">
+        <section id="taskList">
+            <div class="form-group">
+                <button id="addButton"
+                        class="btn btn-md btn-info">
+                    Add New
+                </button>
+                <div class="pull-right">
+                    <div class="checkbox">
+                        <label>
+                            <input id="showActiveCheckbox"
+                                   type="checkbox"
+                                   value=""
+                                   checked>Show Active
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input id="showCompletedCheckbox"
+                                   type="checkbox"
+                                   value=""
+                                   checked>Show Completed
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="selectAll"
+                                               type="checkbox"
+                                               value="">Select All
+                                    </label>
+                                </div>
+                            </th>
+                            <th>Description</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int index = 0; index < Model.Tasks.Count; index++)
+                        {
+                            <tr id="@Model.Tasks[index].Id"
+                                class="@(Model.Tasks[index].IsCompleted ? "completed" : "")">
+                                <td>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="select_@Model.Tasks[index].Id"
+                                                   type="checkbox"
+                                                   value="">
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.Tasks[index].Description)
+                                </td>
+                                <td>
+                                    @Html.CheckBoxFor(m => m.Tasks[index].IsCompleted, new { id = "complete_" + Model.Tasks[index].Id })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <button id="deleteSelectedButton"
+                        class="btn btn-md btn-danger"
+                        disabled>
+                    Delete Selected
+                </button>
+                <div id="activeTaskCount"
+                     class="pull-right">
+                    @(Model.ActiveCount + " Active Task" + (Model.ActiveCount != 1 ? "s" : ""))
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="modal fade"
+     id="addModal"
+     role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h2>Add New Task</h2>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <form id="addForm">
+                    <div class="row">
+                        <label class="col-md-2 control-label"
+                               for="Description">
+                            Description
+                        </label>
+                        <div class="col-md-10">
+                            <input class="form-control"
+                                   id="Description"
+                                   name="Description"
+                                   type="text"
+                                   required
+                                   autofocus />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="addOkButton"
+                        type="button"
+                        class="btn btn-default">
+                    Ok
+                </button>
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+     id="confirmDeleteModal"
+     role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h2>Confirm</h2>
+            </div>
+            <div class="modal-body">
+                Delete selected tasks?
+            </div>
+            <div class="modal-footer">
+                <button id="confirmDeleteButton"
+                        type="button"
+                        class="btn btn-default">
+                    Ok
+                </button>
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#addButton').click(function (e) {
+        $('#addModal').modal();
+    });
+
+    $('#addOkButton').click(function (e) {
+        $('#addForm').submit();
+    });
+
+    $('#addForm').submit(function (e) {
+        $.ajax({
+            type: 'POST',
+            url: '/Home/AddTask',
+            data: $(this).serialize(),
+            success: function (data) {
+                $('table tbody').append(data);
+                $('tr:nth-last-child(1) > td:nth-child(1) input[type=checkbox]').change(selectTask);
+                $('tr:nth-last-child(1) > td:nth-child(3) input[type=checkbox]').change(toggleIsCompleted);
+                refreshActiveTaskCount();
+                $('#addModal').modal('hide');
+            }
+        });
+
+        e.preventDefault();
+    });
+
+    var refreshActiveTaskCount = function () {
+        var activeTaskCount = $('tr > td:nth-child(3) input[type=checkbox]:not(:checked)').length;
+        if (activeTaskCount != 1)
+            $('#activeTaskCount').text(activeTaskCount + ' Active Tasks');
+        else
+            $('#activeTaskCount').text(activeTaskCount + ' Active Task');
+    };
+
+    $('#showActiveCheckbox').change(function (e) {
+        var $checkbox = $(this);
+        var $checkboxes = $('tr > td:nth-child(3) input[type=checkbox]:not(:checked)');
+
+        if ($checkbox.is(':checked')) {
+            $checkboxes.closest('tr').show();
+        }
+        else {
+            $checkboxes.closest('tr').hide();
+        }
+    });
+
+    $('#showCompletedCheckbox').change(function (e) {
+        var $checkbox = $(this);
+        var $checkboxes = $('tr > td:nth-child(3) input[type=checkbox]:checked');
+
+        if ($checkbox.is(':checked')) {
+            $checkboxes.closest('tr').show();
+        }
+        else {
+            $checkboxes.closest('tr').hide();
+        }
+    });
+
+    var toggleIsCompleted = function (e) {
+        var $checkbox = $(this);
+
+        var taskModel = {
+            Id: $checkbox.closest('tr').attr('id'),
+            IsCompleted: $checkbox.is(':checked')
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/Home/SaveTaskIsCompleted',
+            data: taskModel,
+            success: function (data) {
+                if ($checkbox.is(':checked'))
+                    $checkbox.closest('tr').addClass('completed');
+                else
+                    $checkbox.closest('tr').removeClass('completed');
+                refreshActiveTaskCount();
+            }
+        });
+    };
+
+    $('tr > td:nth-child(3) input[type=checkbox]').change(toggleIsCompleted);
+
+    var selectTask = function (e) {
+        var $checkbox = $(this);
+        var $checkboxes = $('tr > td:nth-child(1) input[type=checkbox]:checked');
+
+        if ($checkboxes.length == $('tr').length)
+            $('#selectAll').prop('checked', true);
+        else
+            $('#selectAll').prop('checked', false);
+
+        $('#deleteSelectedButton').prop('disabled', $checkboxes.length == 0);
+    };
+
+    $('tr > td:nth-child(1) input[type=checkbox]').change(selectTask);
+
+    $('#selectAll').change(function (e) {
+        var $checkbox = $(this);
+        var $checkboxes = $('tr > td:nth-child(1) input[type=checkbox]');
+
+        if ($checkbox.is(':checked'))
+            $checkboxes.prop('checked', true);
+        else
+            $checkboxes.prop('checked', false);
+
+        $('#deleteSelectedButton').prop('disabled', $('tr > td:nth-child(1) input[type=checkbox]:checked').length == 0);
+    });
+
+    $('#deleteSelectedButton').click(function (e) {
+        $('#confirmDeleteModal').modal();
+    });
+
+    $('#confirmDeleteButton').click(function (e) {
+        $('#confirmDeleteModal').modal('hide');
+
+        $('tr > td:nth-child(1) input[type=checkbox]:checked').each(function (index, value) {
+            var taskModel = {
+                Id: $(value).closest('tr').attr('id'),
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/Home/DeleteTask',
+                data: taskModel,
+                success: function (data) {
+                    $(value).closest('tr').remove();
+                    refreshActiveTaskCount();
+                }
+            });
+        });
+    });
+</script>
