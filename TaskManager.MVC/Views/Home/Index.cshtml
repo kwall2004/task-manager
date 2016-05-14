@@ -209,11 +209,14 @@
         var $checkboxes = $('tr > td:nth-child(3) input[type=checkbox]:not(:checked)');
 
         if ($checkbox.is(':checked')) {
-            $checkboxes.closest('tr').show();
+            $checkboxes.closest('tr').removeClass('hidden');
         }
         else {
-            $checkboxes.closest('tr').hide();
+            $checkboxes.closest('tr').addClass('hidden');
         }
+
+        $('tr > td:nth-child(1) input[type=checkbox]').prop('checked', false);
+        $('#selectAll').prop('checked', false);
     });
 
     $('#showCompletedCheckbox').change(function (e) {
@@ -221,11 +224,14 @@
         var $checkboxes = $('tr > td:nth-child(3) input[type=checkbox]:checked');
 
         if ($checkbox.is(':checked')) {
-            $checkboxes.closest('tr').show();
+            $checkboxes.closest('tr').removeClass('hidden');
         }
         else {
-            $checkboxes.closest('tr').hide();
+            $checkboxes.closest('tr').addClass('hidden');
         }
+
+        $('tr > td:nth-child(1) input[type=checkbox]').prop('checked', false);
+        $('#selectAll').prop('checked', false);
     });
 
     var toggleIsCompleted = function (e) {
@@ -256,7 +262,7 @@
         var $checkbox = $(this);
         var $checkboxes = $('tr > td:nth-child(1) input[type=checkbox]:checked');
 
-        if ($checkboxes.length == $('tr').length)
+        if ($checkboxes.length == $('tr:not(.hidden) > td:nth-child(1)').length)
             $('#selectAll').prop('checked', true);
         else
             $('#selectAll').prop('checked', false);
@@ -268,14 +274,14 @@
 
     $('#selectAll').change(function (e) {
         var $checkbox = $(this);
-        var $checkboxes = $('tr > td:nth-child(1) input[type=checkbox]');
+        var $checkboxes = $('tr:not(.hidden) > td:nth-child(1) input[type=checkbox]');
 
         if ($checkbox.is(':checked'))
             $checkboxes.prop('checked', true);
         else
             $checkboxes.prop('checked', false);
 
-        $('#deleteSelectedButton').prop('disabled', $('tr > td:nth-child(1) input[type=checkbox]:checked').length == 0);
+        $('#deleteSelectedButton').prop('disabled', $('tr:not(.hidden) > td:nth-child(1) input[type=checkbox]:checked').length == 0);
     });
 
     $('#deleteSelectedButton').click(function (e) {
@@ -285,7 +291,7 @@
     $('#confirmDeleteButton').click(function (e) {
         $('#confirmDeleteModal').modal('hide');
 
-        $('tr > td:nth-child(1) input[type=checkbox]:checked').each(function (index, value) {
+        $('tr:not(.hidden) > td:nth-child(1) input[type=checkbox]:checked').each(function (index, value) {
             var taskModel = {
                 Id: $(value).closest('tr').attr('id'),
             };
