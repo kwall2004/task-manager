@@ -100,21 +100,20 @@
         };
 
         $scope.isIndeterminate = function () {
-            return ($scope.selected.length !== 0 &&
-                $scope.selected.length !== $scope.tasks.length);
+            return ($scope.selected.length != 0 &&
+                $scope.selected.length != $scope.filteredTasks.length);
         };
 
         $scope.isChecked = function () {
             return ($scope.selected.length > 0 &&
-                $scope.selected.length === $scope.tasks.length);
+                $scope.selected.length == $scope.filteredTasks.length);
         };
 
         $scope.toggleAll = function () {
-            if ($scope.selected.length === $scope.tasks.length) {
+            if ($scope.selected.length == $scope.filteredTasks.length) 
                 $scope.selected = [];
-            } else if ($scope.selected.length === 0 || $scope.selected.length > 0) {
-                $scope.selected = $scope.tasks.slice(0);
-            }
+            else  
+                $scope.selected = $scope.filteredTasks.slice(0);
         };
 
         var filter = function () {
