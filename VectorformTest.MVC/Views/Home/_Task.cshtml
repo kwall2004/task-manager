@@ -1,0 +1,22 @@
+﻿@using VectorformTest.MVC.Models
+
+@model TaskViewModel
+
+<tr id="@Model.Id">
+    <td>
+        <div class="checkbox">
+            <label>
+                <input id="select_@Model.Id" 
+                       type="checkbox" 
+                       value="">
+            </label>
+        </div>
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Description)
+    </td>
+    <td>
+        @Html.CheckBoxFor(m => m.IsCompleted, new { id = "complete_" + Model.Id })
+    </td>
+</tr>
+
